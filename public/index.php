@@ -1,45 +1,37 @@
 <?
 use app\models\Products;
 
-
+session_start();
 include "../engine/Autoload.php";
 include "../config/main.php";
 
 use app\engine\Autoload;
-use app\models\Product;
-
+use app\models\Users;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
+$controllerName = $_GET['c'] ?: 'product';
+$actionName = $_GET['a'] ?: 'catalog';
+//var_dump($_GET['a']);
+//var_dump($_GET['c']);
+//var_dump(Products::getOne(1));die();
+$controllerClass = "app\\controllers\\" . ucfirst($controllerName) . "Controller";
 
-// Получение всех товаров
-$prods=new Products();
-// Создание нового товара
-$newprod = new Product([
+if (class_exists($controllerClass)) {
+    $controller = new $controllerClass();
+    $controller->runAction($actionName);
+}
+//Добавление нового товара
+//$p=new Products("Товар5","Описание товара5", 900,"05.jpg",1,1,1);
+//$p->insert();
 
-    name_product        => 'Товар3',
-    description         => 'Оприсание товара3',
-    price               => 555,
-    name_unit           => 'шт.',
-    img                 => 'kdfls',
-    type                => 'Физический',
-    category            => 'Одежда'
-]);
-// Добавление нового товара в БД
-$prods->insert($newprod);
-// Обновление созданного товара
-$update = $prods->getOne($prods->products[count($prods->products)-1]);
-$update->name_product = "Updated";
-$update->price = "666";
-$update->description = "Новое описание";
-//$update->name_unit = "кг"; // по этому полю обновление не работает ((
-$update->img = "новый";
-$update->type = "Весовой";
-$update->category = "Техника";
-$prods->update($update);
-var_dump('Все продукты',$prods);
-
-//Удаление товара из БД
-//$prods->delete($prods->products[count($prods->products)-1]);
-var_dump('Все продукты',$prods);
-
+// Обновление товара
+//$product2Update = Products::getOne(1);
+//
+//$product2Update->price = 999;
+//$product2Update->description = "Новое описание товара1";
+//$product2Update->name_product = "Новое название Товар1";
+//$product2Update->id_product_type = 2;
+//$product2Update->id_product_category = 2;
+//$product2Update->id_unit = 2;
+//$product2Update->update();
