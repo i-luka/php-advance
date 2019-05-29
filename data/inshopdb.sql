@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 24 2019 г., 17:02
+-- Время создания: Май 27 2019 г., 12:36
 -- Версия сервера: 5.7.25
 -- Версия PHP: 7.1.22
 
@@ -41,14 +41,10 @@ CREATE TABLE `carts` (
 --
 
 INSERT INTO `carts` (`id_cart`, `id_product`, `id_user`, `id_session`, `quantity`) VALUES
-(1, 1, 1, '456546', 4),
 (2, 1, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1),
-(5, 1, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1),
-(6, 2, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1),
-(7, 3, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1),
-(8, 4, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1),
-(9, 2, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1),
-(10, 2, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1);
+(15, 3, NULL, '5cglecpglen37m5rq1nts6lcb34ugpn6', 1),
+(19, 2, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1),
+(20, 4, NULL, 'o4tg99ce059norrtmc9vqva9v8cb5nd5', 1);
 
 -- --------------------------------------------------------
 
@@ -84,11 +80,13 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id_product`, `name_product`, `price`, `img`, `id_unit`, `id_product_type`, `id_product_category`, `description`) VALUES
-(1, 'Товар1', '999', '01.jpg', 2, 2, 2, 'Описание товара1'),
+(1, 'Товар1', '1', '01.jpg', 2, 2, 2, 'Описание товара1'),
 (2, 'Товар 2', '998', '02.jpg', 1, 2, 1, 'Описание товара1'),
 (3, 'Товар3', '456', '03.jpg', 1, 1, 1, 'Описание товара3'),
 (4, 'Товар4', '654', '04.jpg', 1, 1, 1, 'Описание товара4'),
-(7, 'Товар5', '900', '05.jpg', 1, 1, 1, 'Описание товара5');
+(7, 'Товар5', '900', '05.jpg', 1, 1, 1, 'Описание товара5'),
+(8, 'Товар6', '900', '06.jpg', 1, 1, 1, 'Описание товара6'),
+(10, 'Товар7', '700', '07.jpg', 1, 1, 1, 'Описание товара7');
 
 -- --------------------------------------------------------
 
@@ -222,7 +220,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id_cart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_cart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT для таблицы `orders`
@@ -234,7 +232,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_product` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT для таблицы `product_category`
