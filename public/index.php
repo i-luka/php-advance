@@ -11,16 +11,26 @@ use app\models\Users;
 use app\utils\{Render};
 use app\utils\TwigRender;
 use app\models\Products;
+use app\engine\Request;
+use app\interfaces\IAuthorization;
+use app\engine\Authorization;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
-$controllerName = $_GET['c'] ?: 'default';
-$actionName = $_GET['a'] ?: 'view';
+
+//var_dump('$_SERVER', $_SERVER['REQUEST_URI']);
+$request = new Request();
+$controllerName = $request->getControllerName()?: 'default';
+$actionName = $request->getActionName() ?: 'view';
+
+//var_dump($request->getControllerName(),$request->getActionName());
+
+//var_dump($_POST);
 
 $controllerClass = "app\\controllers\\" . ucfirst($controllerName) . "Controller";
 //var_dump($controllerClass,$actionName);
 if (class_exists($controllerClass)) {
-    $controller = new $controllerClass(new Render());
+    $controller = new $controllerClass(new Render(), new Authorization());
     $controller->runAction($actionName);
 }
 //Добавление нового товара
