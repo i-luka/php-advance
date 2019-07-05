@@ -3,6 +3,7 @@
 namespace app\engine;
 
 use app\interfaces\IAuthorization;
+use app\models\entities\Users;
 
 
 class Authorization implements IAuthorization
@@ -41,32 +42,29 @@ class Authorization implements IAuthorization
 
                 $hash = uniqid(rand(), true);
                 $id = $_SESSION['id'];
-                $params = [];
-                $sql = "UPDATE `users` SET `hash` = :hash WHERE `id_user` = :id";
+                $current_user = App::call()->userRepository->getOne($id);
+//                var_dump($current_user);die();
+                $current_user->setHash($hash);
+                App::call()->userRepository->update($current_user);
 
-                $params[':hash'] = $hash;
-                $params[':id'] = $id;
-                Db::getInstance()->execute($sql, $params);
-
-                setcookie("hash", $hash, time() + 3600);
+                setcookie("hash", $hash, time() + 3600,'/');
 
             }
             $this->allow = true;
             $this->user = $this->get_user();
-            header("Location: /");
+            $origin = $_SERVER["HTTP_REFERER"];
+            header("Location: " . $origin);
         }
     }
 
     public function auth($login, $pass)
     {
-        $sql = "SELECT * FROM users WHERE login = :login";
-
-        $row = Db::getInstance()->queryAll($sql, [':login' => $login])[0];
-
-        if (password_verify($pass, $row['password'])) {
+        $user = App::call()->userRepository->getObject($login);
+//var_dump($user);die();
+        if (password_verify($pass, $user->password)) {
 
             $_SESSION['login'] = $login;
-            $_SESSION['id'] = $row['id_user'];
+            $_SESSION['id'] = $user->id_user;
 
             return true;
         }
@@ -77,19 +75,11 @@ class Authorization implements IAuthorization
     {
         if (isset($_COOKIE["hash"])) {
             $hash = $_COOKIE["hash"];
-
-            $db = getDb();
-            $sql = "SELECT * FROM `users` WHERE `hash`='{$hash}'";
-            $result = mysqli_query($db, $sql);
-            $row = mysqli_fetch_assoc($result);
-
-            $sql = "SELECT * FROM users WHERE hash = :hash";
-
-            $row = Db::getInstance()->queryAll($sql, [':hash' => $hash])[0];
-
-            $user = $row['login'];
-            if (!empty($user)) {
-                $_SESSION['login'] = $user;
+            $user = App::call()->userRepository->getUserByHash($hash);
+//            var_dump('AUTHERIZATION - is_auth',$user);die();
+            $login = $user->login;
+            if (!empty($login)) {
+                $_SESSION['login'] = $login;
             }
         }
         return isset($_SESSION['login']) ? true : false;

@@ -2,10 +2,12 @@
 
 
 namespace app\controllers;
-use app\models\Carts;
+use app\models\entities\Carts;
 use app\interfaces\IRender;
 use app\engine\Request;
 use app\interfaces\IAuthorization;
+use app\models\repositories\CartRepository;
+use app\engine\App;
 
 class CartController extends Controller
 {
@@ -15,7 +17,7 @@ class CartController extends Controller
     }
     public function actionView() {
 
-        $cart =  Carts::getAll();
+        $cart =  App::call()->cartRepository->getAll();
 
         foreach ($cart as &$item) {
 
@@ -30,10 +32,10 @@ class CartController extends Controller
     public function actionAdd(){
 
 //        var_dump('actionAdd',$_GET);
-        $id =(new Request())->getParams()['id'];//$_GET['id'];
+        $id = App::call()->request->getParams()['id'];//$_GET['id'];
         $session_id = session_id();
 
-        $count = Carts::getCount($id)[0]['count'];
+        $count = App::call()->cartRepository->getCount($id)[0]['count'];
         $cart=null;
         if ($count == 0){
 
@@ -44,21 +46,17 @@ class CartController extends Controller
                 $session_id,
                 1.
             );
-            $cart->insert();
+//            App::call()->cartRepository->insert($cart);
         }else{
 
-            $cart = Carts::getOne($id);
+            $cart = App::call()->cartRepository->getOne($id);
             $cart->setQuantity($cart->getQuantity()+1);
-            $cart->update();
+//            App::call()->cartRepository->update($cart);
 //            var_dump($cart);
         }
-//        $cart->save();
+        App::call()->cartRepository->save($cart);
 //        var_dump($cart);
 
         header("location: /product/catalog");
-    }
-    public function actionDelete(){
-
-
     }
 }

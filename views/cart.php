@@ -15,7 +15,7 @@
            Цена: <?=$item['price']?>
         </p>
         <p class="card-text" style="flex-grow: 1">
-           Количество: <?=$item['quantity']?>
+           Количество: <span class="quantity"><?=$item['quantity']?></span>
         </p>
         <p class="card-text" style="flex-grow: 1">
             Ед.изм.: <?=$item['name_unit']?>
@@ -26,7 +26,7 @@
         <p class="card-text" style="flex-grow: 1">
             Тип: <?=$item['type']?>
         </p>
-        <button class="delete-from-cart-btn" data-id_cart = <?=$item['id_cart']?>>
+        <button class="delete-from-cart-btn" data-id_cart = <?=$item['id_cart']?> data-id_product=<?=$item['id_product']?>>
             [X]
         </button>
     </div>

@@ -2,11 +2,12 @@
 
 namespace app\controllers;
 
+use app\engine\App;
 use app\engine\Request;
 use app\interfaces\IRender;
-use app\models\Order;
-use app\models\Products;
+use app\models\entities\Order;
 use app\interfaces\IAuthorization;
+use app\models\repositories\OrderRepository;
 
 
 class OrderController extends Controller
@@ -24,26 +25,47 @@ class OrderController extends Controller
     }
     public function actionDo(){
 
-        $telefon = (new Request())->getParams()['approve']? (new Request())->getParams()['telefon'] : null;
+        $telefon = App::call()->request->getParams()['approve']? App::call()->request->getParams()['telefon'] : null;
 
         if($telefon){
 
             $order = new Order(null, session_id(), 'Обрабатывается', $telefon);
 //        try{
 
-            $order->insert();
+            App::call()->orderRepository->insert($order);
 
 //        }catch (\Exception $ex){
 //
 //            echo $ex->getMessage();
 //        }
-            session_destroy();
-            header("Location: /");
         }
+        $login =  $_SESSION['login'];
+        $id = $_SESSION['id'];
+        session_regenerate_id(true);
+//        $this->autherizator->login();
+        $_SESSION['login'] = $login;
+        $_SESSION['id'] = $id;
+        header("Location: /");
     }
     public function actionView(){
 
+        $orders =  App::call()->orderRepository->getAll();
 
-        echo $this->render("orderContent", []);
+        echo $this->render("orders", [
+            'orders' => $orders
+        ]);
+    }
+    public function actionSingle(){
+
+        $order =  App::call()->orderRepository->getOne(App::call()->request->getParams()['id_order']);
+//        var_dump($order);die();
+        foreach ($order as &$item) {
+
+            $item['img']=explode(',', $item['img']);
+        }
+        echo $this->render("orderContent", [
+            'order' => $order,
+            'id_order' => App::call()->request->getParams()['id_order']
+        ]);
     }
 }
